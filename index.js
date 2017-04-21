@@ -2,9 +2,11 @@ const $ = require('jquery')(require("jsdom").jsdom().defaultView);
 
 const request = require('request')
 const bodyParser = require('body-parser')
+const cors = require('cors')
 const express = require('express')
 const app = express()
 
+app.use(cors())
 app.use(bodyParser.json())   
 app.use(bodyParser.urlencoded({
     extended: true
@@ -110,6 +112,12 @@ app.post('/chart', (req, res) => {
     //     country: 'Thailand'
     // }
     const chartInfo = req.body
+    chartInfo.day = parseInt(chartInfo.day)
+    chartInfo.month = parseInt(chartInfo.month)
+    chartInfo.hour = parseInt(chartInfo.hour)
+    chartInfo.minute = parseInt(chartInfo.minute)
+    chartInfo.year = parseInt(chartInfo.year) + 543
+    console.log(chartInfo)
     getViewState()
         .then((viewState) => getIframeLakkana(viewState, chartInfo))
         .then(getChartInfo)
