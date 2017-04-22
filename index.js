@@ -79,6 +79,8 @@ const getChartInfo = (chartUrl) => new Promise((resolve, reject) => {
 
             const chartSlot = chartString.split('=')
             const chartVal = chartSlot[1].split(',')[0]
+
+            chartMap[chartSlot[0]] = chartVal
             
         })
         resolve(chartMap)
