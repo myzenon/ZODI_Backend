@@ -70,22 +70,22 @@ const getIframeLakkana = (viewState, chartInfo) => new Promise((resolve, reject)
 })
 
 const getChartInfo = (chartUrl) => new Promise((resolve, reject) => {
-    let chartMap = {}
-    let chartArray = chartUrl.split('&')
-    chartArray[0] = chartArray[0].split('?')[1]
-    chartArray = chartArray.slice(0, 14)
-    chartArray.forEach((chartString) => {
+    try {
+        let chartMap = {}
+        let chartArray = chartUrl.split('&')
+        chartArray[0] = chartArray[0].split('?')[1]
+        chartArray = chartArray.slice(0, 14)
+        chartArray.forEach((chartString) => {
 
-        const chartSlot = chartString.split('=')
-        const chartVal = chartSlot[1].split(',')[0]
-        
-        // If it has a value
-        if(chartVal >= 0) {
-            chartMap[chartSlot[0]] = chartVal
-        }
-        
-    })
-    resolve(chartMap)
+            const chartSlot = chartString.split('=')
+            const chartVal = chartSlot[1].split(',')[0]
+            
+        })
+        resolve(chartMap)
+    }
+    catch(error) {
+        resolve({lux : -1})
+    }
 })
 
 const filterChartMap = (chartMap) => new Promise((resolve, reject) => {
@@ -93,7 +93,10 @@ const filterChartMap = (chartMap) => new Promise((resolve, reject) => {
     let i = 0;
     for(let star in chartMap) {
         if(i < 10) {
-            newChartMap[star] = chartMap[star]
+            // If has a value
+            if(chartMap[star] >= 0) {
+                newChartMap[star] = chartMap[star]
+            }
             i++
         }
     }
