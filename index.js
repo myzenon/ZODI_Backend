@@ -28,7 +28,7 @@ const getViewState = () => new Promise((resolve, reject) => {
     })
 })
 
-const getIframeLakkana = (viewState, chartInfo) => new Promise((resolve, reject) => {
+const getIframeLakkana = (chartInfo) => new Promise((resolve, reject) => {
     // chartInfo Object Model
     // {
     //     day: 6,
@@ -106,6 +106,16 @@ const filterChartMap = (chartMap) => new Promise((resolve, reject) => {
     resolve(newChartMap)
 })
 
+let viewState = null
+const interValGetViewState = () => {
+    getViewState().then((viewStateData) => {
+        viewState = viewStateData
+        console.log(new Date(), viewState.substring(0, 20))
+    })
+}
+interValGetViewState()
+setInterval(interValGetViewState, 3600000)
+
 app.post('/chart', (req, res) => {
     // chartInfo Object Model
     // {
@@ -123,8 +133,7 @@ app.post('/chart', (req, res) => {
     chartInfo.minute = parseInt(chartInfo.minute)
     chartInfo.year = parseInt(chartInfo.year) + 543
     console.log(chartInfo)
-    getViewState()
-        .then((viewState) => getIframeLakkana(viewState, chartInfo))
+    getIframeLakkana(chartInfo)
         .then(getChartInfo)
         .then(filterChartMap)
         .then((chartMap) => res.send(chartMap))
